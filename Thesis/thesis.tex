@@ -1,0 +1,54 @@
+\documentclass[
+    12pt,
+    oneside,
+    a4paper,
+    english
+]{book}
+
+\setcounter{secnumdepth}{5}
+
+% Definizione delle variabili direttamente nel documento principale
+\newcommand{\myUni}{University of Padua}
+\newcommand{\myDepartment}{Department of Mathematics ``Tullio Levi-Civita''}
+\newcommand{\myFaculty}{Master Degree in Computer Science}
+\newcommand{\myTitle}{}
+\newcommand{\myDegree}{Master's Thesis}
+\newcommand{\profTitle}{Prof.}
+\newcommand{\myProf}{Luciano Serafini}
+\newcommand{\myCoProf}{Roberto Confalonieri}
+\newcommand{\graduateTitle}{Candidate}
+\newcommand{\myName}{Marco Brugin}
+\newcommand{\myStudentID}{ID Number: 2122864}
+\newcommand{\myAA}{2026-2027}
+\newcommand{\myLocation}{Padova}
+\newcommand{\myTime}{.... 2027}
+
+% Caricamento dei pacchetti
+\input{config/packages}
+
+% Caricamento della configurazione della tesi
+\input{config/thesis_config}
+
+\date{}
+\hypersetup{pdfstartview=}
+
+\begin{document}
+    \frontmatter
+    \input{preface/1_title_page}
+    \increasepagenumbering
+    \input{preface/2_copyright}
+    \input{preface/3_acknowledgements}
+    
+    \input{preface/4_abstract}
+    \input{preface/5_table_of_contents}
+    \printglossary[type=\acronymtype, title=Acronyms and abbreviations, toctitle=Acronyms and abbreviations]
+    \printglossary[type=main, title=Glossary, toctitle=Glossary]
+    
+    \mainmatter
+    \input{chapters/1_introduction}
+
+    \input{chapters/5_conclusions}
+    
+    \backmatter
+    \input{references/bibliography}
+\end{document}
