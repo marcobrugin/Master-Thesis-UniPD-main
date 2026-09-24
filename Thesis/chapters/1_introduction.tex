@@ -1,9 +1,11 @@
 \chapter{Introduction}
+
 \label{chap:intro}
+
 \noindent
 Artificial intelligence systems are increasingly required not only to learn from data, but also to reason about the knowledge acquired from their environment. Modern machine learning methods have demonstrated remarkable capabilities in processing complex and high-dimensional data, including images, natural language, and other forms of unstructured information. However, learning directly from data does not by itself provide an explicit representation of knowledge or a principled mechanism for expressing logical constraints. Conversely, symbolic artificial intelligence provides powerful formalisms for representing and manipulating structured knowledge, but traditionally relies on explicitly defined symbols and rules and therefore faces difficulties when dealing with noisy, incomplete, or high-dimensional data. The integration of learning and reasoning has consequently become a central topic in neurosymbolic artificial intelligence \cite{badreddine2022logic}.
 Within this context, Logic Tensor Networks (LTNs) provide a framework for integrating first-order logic with differentiable neural computation. LTN introduces a many-valued, end-to-end differentiable logical language, called Real Logic, in which the elements of a first-order logic signature are grounded onto data through neural computational graphs. Logical formulas are assigned truth values in the interval $[0,1]$, allowing logical constraints to participate directly in gradient-based learning \cite{badreddine2022logic}. This provides a common framework in which learning from data and reasoning with background knowledge can be expressed within the same formalism.
-More recently, the Structural Logic Tensor Networks (sLTN) framework extends the original LTN formulation to explicitly represent structural organization in data. While conventional LTN is primarily formulated for domains consisting of collections of individuals, many real-world datasets possess additional dimensions such as temporal order, sequence position, or graph structure. sLTN introduces structural dimensions, structural variables, and structural relations as explicit components of the logical language, allowing such organization to be represented and reasoned about at the logical level \cite{rinaldi2026sltn}. This thesis is situated within this transition from general differentiable logical reasoning over collections of individuals towards logical reasoning over structured data.
+More recently, the Structural Logic Tensor Networks (sLTN) framework extends the original LTN formulation to explicitly represent structural organization in data. While conventional LTN is primarily formulated for domains consisting of collections of individuals, many real-world datasets possess additional dimensions such as temporal order, sequence position, or graph structure. sLTN introduces structural dimensions, structural variables, and structural relations as explicit components of the logical language, allowing such organization to be represented and reasoned about at the logical level \cite{rinaldi2026sltn}. This thesis investigates this extension from a research perspective, focusing not only on how structural information can be represented, but also on whether explicitly modelling such information can improve the generalization of neurosymbolic learning systems.
 
 \section{Logic Tensor Networks}
 \label{sec:LTN}
@@ -16,8 +18,9 @@ This formulation leads to an important reinterpretation of learning. Rather than
 The resulting framework can express a variety of learning and reasoning tasks. The original LTN work demonstrates applications including data clustering, multi-label classification, relational learning, query answering, semi-supervised learning, regression, and embedding learning \cite{badreddine2022logic}. The common feature of these tasks is that data-driven learning and logical constraints can be expressed within a single differentiable framework.
 An LTN model can therefore be viewed as consisting of two interacting components. On the one hand, neural computation provides continuous representations and differentiable mappings from data to these representations. On the other hand, the logical layer specifies relationships and constraints between the represented entities. The grounding connects these two levels by mapping logical terms and predicates to differentiable tensor operations \cite{badreddine2022logic}.
 This combination is particularly relevant when background knowledge is available. Instead of treating the available knowledge as an external post-processing mechanism, LTN incorporates it directly into the learning objective. The logical structure can consequently influence the learned representations while the neural components provide the flexibility required to learn from numerical data \cite{badreddine2022logic}.
-\pagebreak
+
 \section{From Flat Domains to Structured Data}
+
 \noindent
 Despite the generality of the LTN framework, its original formulation is primarily oriented towards domains that can be described as collections of individuals and relations between them. This setting is appropriate for many relational learning problems, where entities can be represented independently and logical predicates describe their properties or relationships. However, a large class of modern datasets contains an additional structural organization that cannot be naturally described only through relations between independent individuals \cite{rinaldi2026sltn}.
 Examples include temporal sequences, where observations are associated with ordered time steps; sequential data, where the position of an element within a sequence is significant; and graphs, where the connectivity between nodes provides essential information about the domain. In these settings, the position or structural context of an observation is itself meaningful. Treating such information merely as an additional property of an individual does not necessarily provide a natural representation of the underlying structure \cite{rinaldi2026sltn}.
@@ -34,34 +37,125 @@ can express that $t'$ is the position immediately following $t$ in a temporal or
 This extension is important because structural relationships can influence the interpretation of a formula. A constraint may not simply state that a property holds for an individual, but that it holds at a particular structural position, or that properties at two positions are related according to the structure of the underlying data. sLTN consequently provides a way to express temporal, sequential, and relational constraints directly within the logical language \cite{rinaldi2026sltn}.
 
 \section{Structural Logic Tensor Networks}
+
 \label{sec:SLTN}
+
 \noindent
 Structural Logic Tensor Networks extend the LTN framework by making structural dimensions first-class elements of the logical language. The framework introduces an explicit distinction between the logical domain of individuals and the structural organization associated with tensors. This allows logical expressions to refer to positions within structured data while retaining the differentiable fuzzy semantics of LTN \cite{rinaldi2026sltn}.
-The formal language of sLTN includes ordinary first-order elements such as sorts, constants, variables, functions, and predicates, together with structural elements such as structural variables and structural relations. Structural dimensions provide the link between the logical description and the axes of the underlying tensors \cite{rinaldi2026sltn}
+The formal language of sLTN includes ordinary first-order elements such as sorts, constants, variables, functions, and predicates, together with structural elements such as structural variables and structural relations. Structural dimensions provide the link between the logical description and the axes of the underlying tensors \cite{rinaldi2026sltn}.
 A structural dimension can be understood as a named axis associated with a particular type of organization in the data. For example, a dimension called \textit{time} may identify the temporal axis of a tensor, while another dimension may represent positions in a sequence. The structural dimension is not merely metadata: it participates in the interpretation of logical expressions by determining how tensorial data are aligned, selected, masked, or aggregated \cite{rinaldi2026sltn}.
 Structural variables are used to quantify over the positions of these dimensions. In contrast to ordinary first-order variables, which range over individuals, structural variables range over indices associated with structural dimensions. This distinction allows formulas to make explicit statements about the location of data within a structured object \cite{rinaldi2026sltn}.
 Structural relations provide a further level of expressiveness. They allow relationships between structural positions to be represented explicitly. For example, a temporal relation can identify consecutive time steps, while other structural relations can describe more general dependencies between positions. These relations can be Boolean or fuzzy and can therefore be integrated into the differentiable semantics of the framework \cite{rinaldi2026sltn}.
 An important consequence of this design is that structural information becomes part of the logical theory rather than being handled exclusively by the underlying neural architecture. The logical language can therefore express constraints whose meaning depends directly on the organization of the data. This is particularly relevant for problems in which temporal or sequential dependencies are part of the knowledge that should guide learning \cite{rinaldi2026sltn}.
-
 The sLTN framework retains the central principle of LTN: logical expressions are interpreted through differentiable tensor operations. Thus, introducing structural dimensions does not replace the original tensorial semantics but extends it to account for additional axes of organization. The resulting framework can align logical expressions with tensor dimensions and use structural information when performing selection, masking, or aggregation operations \cite{rinaldi2026sltn}.
-An important theoretical property of sLTN is that the original LTN framework can be recovered as a special case. When no structural dimensions are introduced, the structural extension does not add additional structure to the interpretation, and the framework reduces to the original LTN setting \cite{rinaldi2026sltn}. This establishes a direct relationship between the two formulations rather than defining sLTN as an independent logical framework.
-\pagebreak
+An important theoretical property of sLTN is that the original LTN framework can be recovered as a special case. When no structural dimensions are introduced, the structural extension does not add additional structure to the interpretation, and the framework reduces to the original LTN setting \cite{rinaldi2026sltn}.
+
 \section{Syntax, Semantics, and Tensorial Interpretation}
+
 \noindent
 A central aspect of sLTN is the explicit separation between the syntactic and semantic levels of the framework. The language first defines the symbols and expressions that are permitted by the theory. These expressions are then parsed and validated before being interpreted over tensorial data \cite{rinaldi2026sltn}.
 The signature specifies the vocabulary available to a theory. It contains the sorts, dimensions, constants, variables, functions, predicates, and structural relations required to construct formulas. This explicit signature provides a formal description of the entities and relationships that can appear in a logical theory \cite{rinaldi2026sltn}.
 The syntactic layer is followed by formula parsing and validation. This separation is important because it distinguishes the logical structure of an expression from the numerical representation used to evaluate it. A formula can therefore be treated as a symbolic object before being mapped to tensor operations by the interpretation mechanism \cite{rinaldi2026sltn}.
 At the semantic level, the symbols of the logical language are assigned tensorial interpretations. Constants and variables are grounded into tensor representations, while predicates and functions are interpreted through differentiable operations. Logical connectives and quantifiers are then evaluated using fuzzy semantics, producing numerical truth values \cite{badreddine2022logic,rinaldi2026sltn}.
 Structural dimensions introduce an additional component into this interpretation. A structural dimension determines an axis of the tensorial representation, while structural variables identify positions along that axis. Structural relations determine relationships between such positions. The interpretation can consequently use the structural information to align tensors and to perform operations that respect the organization encoded by the data \cite{rinaldi2026sltn}.
-This tensorial interpretation is essential for maintaining differentiability. Logical reasoning is not implemented as a separate symbolic process disconnected from learning. Instead, formulas are translated into differentiable numerical operations whose outputs can contribute to an optimization objective. As in LTN, the truth value of a formula can therefore influence the learning of the parameters involved in its grounding \cite{badreddine2022logic}.
+This tensorial interpretation is essential for maintaining differentiability. Logical reasoning is not implemented as a separate symbolic process disconnected from learning. Instead, formulas are translated into differentiable numerical operations whose outputs can contribute to an optimization objective. As in LTN, the truth value of a formula can therefore influence the learning of the parameters involved in its grounding \cite{badreddine2022logic,rinaldi2026sltn}.
 The separation between syntax and semantics also provides a modular view of the framework. The logical theory specifies what can be expressed, while the interpretation specifies how those expressions are connected to the underlying data. This distinction becomes particularly useful for structured data because the same logical concepts can be associated with different tensorial organizations through their structural dimensions \cite{rinaldi2026sltn}.
 
-\section{Motivation and Objectives}
-\noindent
-The motivation for studying structured extensions of Logic Tensor Networks follows from the increasing importance of structured and multidimensional data in machine learning. Temporal sequences, ordered observations, and graph-structured information contain relationships that are intrinsic to their organization. Representing such information within a differentiable logical framework requires mechanisms capable of referring explicitly to positions and structural relationships \cite{rinaldi2026sltn}.
-The original LTN framework provides the fundamental combination of first-order logic, fuzzy semantics, tensorial grounding, and differentiable learning \cite{badreddine2022logic}. sLTN extends these principles by introducing structural dimensions and relations into the logical language, thereby providing a mechanism for expressing constraints over structured data \cite{rinaldi2026sltn}.
-From this perspective, the objective is not to replace neural computation with symbolic reasoning. Rather, the objective is to provide a common formal language in which numerical representations and logical constraints can coexist. Neural components remain responsible for learning continuous representations, while logical formulas provide explicit knowledge and structural constraints that can be incorporated into the learning process \cite{badreddine2022logic,rinaldi2026sltn}.
-The structural extension is particularly relevant when the structure itself carries semantic information. For example, in temporal data, the relationship between two observations may depend on their relative positions in time. In sequential data, the position of an element may determine its relationship with neighbouring elements. In graph data, connectivity determines which entities are directly related. Structural dimensions and relations provide explicit constructs for representing these dependencies \cite{rinaldi2026sltn}.
-Another important objective is to preserve the differentiable nature of LTN. Introducing structural information should not require abandoning gradient-based optimization. sLTN therefore maintains the tensorial and fuzzy semantics of LTN while extending them to structured dimensions \cite{rinaldi2026sltn}.
-The resulting perspective can be summarized as the integration of three components: logical knowledge, differentiable representations, and structural organization. Logical knowledge describes properties and relationships that should hold; differentiable representations connect these concepts to numerical data; and structural dimensions describe how data are organized within tensors. Together, these components provide the conceptual basis for reasoning over structured data using differentiable logical constraints.
+\section{Motivation and Research Gap}
 
+\noindent
+The introduction of structural dimensions and relations provides a mechanism for representing information that is intrinsic to the organization of structured data. However, the availability of such a representation does not by itself establish whether explicit structural reasoning provides a measurable advantage during learning. In particular, an important question is whether structural information can improve the ability of a neurosymbolic model to generalize logical knowledge to structural configurations that were not observed during training.
+This question is particularly relevant because a model may achieve good predictive performance without explicitly representing structure. A purely neural model may learn statistical regularities from the observations, while a conventional LTN may incorporate logical constraints without explicitly modelling structural positions and relations. Consequently, an observed improvement from sLTN cannot simply be assumed to result from the presence of logical reasoning alone.
+\\This thesis therefore focuses on the distinction between learning from observed examples and generalizing logical knowledge across different structural configurations. The central research problem is to determine whether explicitly representing structural organization provides a specific advantage when the target concept depends on structural relationships.
+The research is consequently motivated by the following question:
+
+\begin{quote}
+\textit{When does explicit structural reasoning improve the generalization of neurosymbolic models to previously unseen structural configurations?}
+\end{quote}
+\noindent
+Rather than assuming that structural reasoning is beneficial in every setting, the study investigates the conditions under which its contribution becomes relevant. This includes situations in which the target concept has different degrees of dependence on structural information and situations in which the amount of available training data is varied.
+
+\section{Research Questions}
+
+\noindent
+The main objective of this thesis is to investigate whether explicitly representing structural information can improve the ability of neurosymbolic models to generalize beyond the structural configurations observed during training. To address this objective, the thesis formulates the following research questions:
+
+\begin{itemize}
+\item \textbf{RQ1 --- Structural Generalization.}
+
+```
+To what extent does explicit structural reasoning affect the generalization of neurosymbolic models to previously unseen structural configurations?
+
+\item \textbf{RQ2 --- LTN and sLTN Comparison.}
+
+How does the generalization performance of sLTN compare with that of conventional LTN when the structural configurations encountered during testing differ from those observed during training?
+
+\item \textbf{RQ3 --- Structural Dependency.}
+
+How does the degree of structural dependency of a task affect the relative performance of models with and without explicit structural representations?
+
+\item \textbf{RQ4 --- Data Efficiency.}
+
+To what extent does explicit structural reasoning affect the data efficiency of neurosymbolic models under limited supervision?
+```
+
+\end{itemize}
+
+\noindent
+These research questions are addressed through a controlled experimental evaluation involving models with different combinations of neural learning, logical constraints, and explicit structural information. In particular, the experimental analysis compares a purely neural baseline, a conventional LTN model, and an sLTN model incorporating structural dimensions and relations.
+
+\section{Research Hypotheses}
+
+\noindent
+Based on the research questions introduced in the previous section, this thesis formulates three hypotheses to be empirically investigated.
+
+\begin{itemize}
+\item \textbf{H1 --- Structural Generalization.}
+
+
+Explicit structural representations are expected to improve the generalization of neurosymbolic models to previously unseen structural configurations when the target task depends on structural relationships.
+
+\item \textbf{H2 --- Structural Dependency.}
+
+The relative benefit of explicit structural reasoning is expected to increase with the degree of structural dependency of the task. Conversely, when the target task can be solved primarily from local or non-structural information, the difference between models with and without explicit structural representations is expected to be smaller.
+
+\item \textbf{H3 --- Data Efficiency.}
+
+Explicit structural reasoning is expected to provide greater benefits when the amount of available training data is limited, as structural information may provide additional constraints that support learning from fewer labelled examples.
+
+\end{itemize}
+
+\noindent
+These hypotheses are formulated as empirical research hypotheses rather than assumptions about the superiority of sLTN. The experimental evaluation therefore also considers scenarios in which explicit structural reasoning provides limited or no measurable improvement. This approach makes it possible to investigate both the potential benefits and the limitations of explicit structural reasoning in neurosymbolic learning.
+
+\section{Contributions of the Thesis}
+
+\noindent
+The primary contribution of this thesis is a systematic experimental investigation of the role of explicit structural representations in neurosymbolic learning. Rather than evaluating sLTN solely in terms of predictive performance, the thesis investigates whether and under which conditions structural reasoning contributes to the generalization of learned knowledge.
+The experimental framework provides a controlled comparison between three model settings: a purely neural baseline, a conventional Logic Tensor Network, and a Structural Logic Tensor Network incorporating explicit structural dimensions and relations. This comparison is intended to separate the contribution of neural learning, logical constraints, and explicit structural information.
+A further contribution is the formulation of controlled structural generalization scenarios in which the structural configurations encountered during evaluation differ from those observed during training. This experimental setting provides a direct means of assessing whether models can transfer learned knowledge across changes in structural organization.
+The thesis also investigates the relationship between structural dependency and model performance. By considering tasks with different degrees of dependence on structural relationships, the study aims to identify the conditions under which explicit structural reasoning is most relevant, as well as situations in which it provides limited additional benefit.
+Finally, the evaluation considers multiple dimensions of model behaviour, including predictive performance, logical satisfaction, generalization to unseen structural configurations, data efficiency, and computational characteristics. This broader evaluation is intended to provide a more comprehensive characterization of the practical role of structural reasoning in neurosymbolic learning.
+\section{Thesis Organization}
+
+\noindent
+
+The remainder of this thesis is organized as follows:
+
+\begin{itemize}
+\item \textbf{Chapter~2} introduces the theoretical background required for the study, including neurosymbolic learning, first-order logic, fuzzy logic, Logic Tensor Networks, and the principles underlying structured data representations.
+
+\item \textbf{Chapter~3} presents the Structural Logic Tensor Network framework in greater detail, focusing on its syntax, semantics, structural dimensions, structural variables, structural relations, and tensorial interpretation.
+
+\item \textbf{Chapter~4} describes the research methodology adopted in this thesis. It introduces the experimental tasks and datasets, the neural and neurosymbolic baselines, the structural configurations considered in the experiments, the evaluation metrics, and the experimental protocols used to address the research questions.
+
+\item \textbf{Chapter~5} presents the experimental evaluation of structural generalization. The chapter investigates the performance of the considered models on structural configurations observed during training as well as on previously unseen configurations.
+
+\item \textbf{Chapter~6} analyses the experimental results, with particular emphasis on the relationship between structural dependency, generalization performance, logical satisfaction, data efficiency, and computational characteristics.
+
+\item \textbf{Chapter~7} discusses the findings in relation to the research questions and hypotheses. Particular attention is given to identifying the conditions under which explicit structural reasoning provides measurable benefits, as well as the conditions under which its contribution is limited.
+
+\item \textbf{Chapter~8} summarizes the main findings of the thesis, discusses its limitations, and outlines directions for future research, including the potential extension of the experimental analysis to additional structured domains and neurosymbolic learning settings.
+```
+
+\end{itemize}
