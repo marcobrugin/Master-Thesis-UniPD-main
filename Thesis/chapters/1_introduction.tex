@@ -64,53 +64,57 @@ The separation between syntax and semantics also provides a modular view of the 
 \section{Motivation and Research Gap}
 
 \noindent
-The introduction of structural dimensions and relations provides a mechanism for representing information that is intrinsic to the organization of structured data. However, the availability of such a representation does not by itself establish whether explicit structural reasoning provides a measurable advantage during learning. In particular, an important question is whether structural information can improve the ability of a neurosymbolic model to generalize logical knowledge to structural configurations that were not observed during training.
-This question is particularly relevant because a model may achieve good predictive performance without explicitly representing structure. A purely neural model may learn statistical regularities from the observations, while a conventional LTN may incorporate logical constraints without explicitly modelling structural positions and relations. Consequently, an observed improvement from sLTN cannot simply be assumed to result from the presence of logical reasoning alone.
-\\This thesis therefore focuses on the distinction between learning from observed examples and generalizing logical knowledge across different structural configurations. The central research problem is to determine whether explicitly representing structural organization provides a specific advantage when the target concept depends on structural relationships.
-The research is consequently motivated by the following question:
+The introduction of structural dimensions and relations provides a mechanism for representing information that is intrinsic to the organization of structured data. However, the availability of such a representation does not by itself establish whether explicit structural reasoning provides a measurable advantage during learning. In particular, it remains important to determine the conditions under which structural information can improve the ability of a neurosymbolic model to generalize learned knowledge to structural configurations that were not observed during training.
+This question is particularly relevant because a model may achieve good predictive performance without explicitly representing structure. A purely neural model may learn statistical regularities from the observations, while a conventional LTN may incorporate logical constraints without explicitly modelling structural positions and relations. Consequently, any improvement observed with sLTN should not automatically be attributed to the presence of explicit structural reasoning.
+\noindent
+This thesis therefore focuses on the relationship between structural information and generalization. Rather than assuming that explicit structural reasoning is beneficial in every setting, the study investigates whether its contribution depends on the extent to which the target task relies on structural relationships. In addition, the study examines whether this relationship changes when the amount of available training data is reduced.
+
+\noindent
+The central research problem can therefore be formulated as follows:
 
 \begin{quote}
 \textit{When does explicit structural reasoning improve the generalization of neurosymbolic models to previously unseen structural configurations?}
 \end{quote}
+
 \noindent
-Rather than assuming that structural reasoning is beneficial in every setting, the study investigates the conditions under which its contribution becomes relevant. This includes situations in which the target concept has different degrees of dependence on structural information and situations in which the amount of available training data is varied.
+The experimental analysis is designed to identify conditions under which explicit structural representations provide a measurable benefit, as well as conditions in which their contribution is limited. This allows the study to characterize the role of structural reasoning rather than simply comparing the overall predictive performance of different models.
 
 \section{Research Questions}
 
 \noindent
-The main objective of this thesis is to investigate whether explicitly representing structural information can improve the ability of neurosymbolic models to generalize beyond the structural configurations observed during training. To address this objective, the thesis formulates the following research questions:
+The main objective of this thesis is to investigate the conditions under which explicitly representing structural information can improve the ability of neurosymbolic models to generalize beyond the structural configurations observed during training. To address this objective, the thesis considers the following research questions:
 
 \begin{itemize}
+
+
 \item \textbf{RQ1 --- Structural Generalization.}
 
-```
 To what extent does explicit structural reasoning affect the generalization of neurosymbolic models to previously unseen structural configurations?
 
 \item \textbf{RQ2 --- LTN and sLTN Comparison.}
 
 How does the generalization performance of sLTN compare with that of conventional LTN when the structural configurations encountered during testing differ from those observed during training?
 
-\item \textbf{RQ3 --- Structural Dependency.}
+\item \textbf{RQ3 --- Conditions for Structural Benefit.}
 
-How does the degree of structural dependency of a task affect the relative performance of models with and without explicit structural representations?
+How does the benefit of explicit structural reasoning vary with the structural dependency of the task and the amount of available training data?
 
-\item \textbf{RQ4 --- Data Efficiency.}
 
-To what extent does explicit structural reasoning affect the data efficiency of neurosymbolic models under limited supervision?
 \end{itemize}
+
 \noindent
-These research questions are addressed through a controlled experimental evaluation involving models with different combinations of neural learning, logical constraints, and explicit structural information. In particular, the experimental analysis compares a purely neural baseline, a conventional LTN model, and an sLTN model incorporating structural dimensions and relations.
+These research questions are addressed through a controlled experimental evaluation involving a neural baseline, a conventional Logic Tensor Network, and a Structural Logic Tensor Network incorporating explicit structural dimensions and relations.
 
 \section{Research Hypotheses}
 
 \noindent
-Based on the research questions introduced in the previous section, this thesis formulates three hypotheses to be empirically investigated.
+Based on the research questions introduced in the previous section, this thesis formulates the following hypotheses to be empirically investigated:
 
 \begin{itemize}
+
 \item \textbf{H1 --- Structural Generalization.}
 
-
-Explicit structural representations are expected to improve the generalization of neurosymbolic models to previously unseen structural configurations when the target task depends on structural relationships.
+Explicit structural representations are expected to improve generalization to previously unseen structural configurations when the target task depends on structural relationships.
 
 \item \textbf{H2 --- Structural Dependency.}
 
@@ -118,37 +122,39 @@ The relative benefit of explicit structural reasoning is expected to increase wi
 
 \item \textbf{H3 --- Data Efficiency.}
 
-Explicit structural reasoning is expected to provide greater benefits when the amount of available training data is limited, as structural information may provide additional constraints that support learning from fewer labelled examples.
+The benefit of explicit structural reasoning is expected to become more pronounced when the amount of available training data is reduced, particularly for tasks that strongly depend on structural relationships.
+
 
 \end{itemize}
 
 \noindent
-These hypotheses are formulated as empirical research hypotheses rather than assumptions about the superiority of sLTN. The experimental evaluation therefore also considers scenarios in which explicit structural reasoning provides limited or no measurable improvement. This approach makes it possible to investigate both the potential benefits and the limitations of explicit structural reasoning in neurosymbolic learning.
+These hypotheses are formulated as empirical research hypotheses rather than assumptions about the superiority of sLTN. The experimental evaluation therefore considers both scenarios in which explicit structural reasoning provides a measurable benefit and scenarios in which its contribution is limited or absent. The objective is to identify the conditions associated with a structural advantage rather than to establish a priori that one model is universally superior to another.
 
 \section{Contributions of the Thesis}
 
 \noindent
-The primary contribution of this thesis is a systematic experimental investigation of the role of explicit structural representations in neurosymbolic learning. Rather than evaluating sLTN solely in terms of predictive performance, the thesis investigates whether and under which conditions structural reasoning contributes to the generalization of learned knowledge.
-The experimental framework provides a controlled comparison between three model settings: a purely neural baseline, a conventional Logic Tensor Network, and a Structural Logic Tensor Network incorporating explicit structural dimensions and relations. This comparison is intended to separate the contribution of neural learning, logical constraints, and explicit structural information.
-A further contribution is the formulation of controlled structural generalization scenarios in which the structural configurations encountered during evaluation differ from those observed during training. This experimental setting provides a direct means of assessing whether models can transfer learned knowledge across changes in structural organization.
-The thesis also investigates the relationship between structural dependency and model performance. By considering tasks with different degrees of dependence on structural relationships, the study aims to identify the conditions under which explicit structural reasoning is most relevant, as well as situations in which it provides limited additional benefit.
-Finally, the evaluation considers multiple dimensions of model behaviour, including predictive performance, logical satisfaction, generalization to unseen structural configurations, data efficiency, and computational characteristics. This broader evaluation is intended to provide a more comprehensive characterization of the practical role of structural reasoning in neurosymbolic learning.
+The primary contribution of this thesis is a systematic experimental investigation of the conditions under which explicit structural representations contribute to structural generalization in neurosymbolic learning.
+The experimental framework provides a controlled comparison between three model settings: a neural baseline, a conventional Logic Tensor Network, and a Structural Logic Tensor Network incorporating explicit structural dimensions and relations. This comparison provides a basis for separating the contribution of logical constraints from that of explicit structural representations.
+A further contribution is the design of controlled structural generalization scenarios in which the structural configurations encountered during evaluation differ from those observed during training. This experimental setting provides a direct means of assessing whether models can generalize learned knowledge across changes in structural organization.
+The thesis also investigates how the contribution of explicit structural reasoning changes with the structural dependency of the task. By considering tasks with different degrees of dependence on structural relationships, the study aims to characterize the conditions under which explicit structural representations become useful and the conditions under which their contribution is limited.
+Finally, the experimental evaluation considers different amounts of available training data. This analysis investigates whether the effect of explicit structural reasoning changes as supervision becomes more limited, with particular attention to tasks in which structural relationships are important for the target prediction.
+
 \section{Thesis Organization}
 
 \noindent
-
 The remainder of this thesis is organized as follows:
 
 \begin{itemize}
+
 \item \textbf{Chapter~2} introduces the theoretical background required for the study, including neurosymbolic learning, first-order logic, fuzzy logic, Logic Tensor Networks, and the principles underlying structured data representations.
 
 \item \textbf{Chapter~3} presents the Structural Logic Tensor Network framework in greater detail, focusing on its syntax, semantics, structural dimensions, structural variables, structural relations, and tensorial interpretation.
 
-\item \textbf{Chapter~4} describes the research methodology adopted in this thesis. It introduces the experimental tasks and datasets, the neural and neurosymbolic baselines, the structural configurations considered in the experiments, the evaluation metrics, and the experimental protocols used to address the research questions.
+\item \textbf{Chapter~4} describes the research methodology adopted in this thesis. It introduces the experimental task and dataset, the considered models, the structural configurations used during training and testing, the different levels of structural dependency, the amounts of training data considered, the evaluation metrics, and the experimental protocols used to address the research questions.
 
-\item \textbf{Chapter~5} presents the experimental evaluation of structural generalization. The chapter investigates the performance of the considered models on structural configurations observed during training as well as on previously unseen configurations.
+\item \textbf{Chapter~5} presents the experimental evaluation of structural generalization. The chapter investigates the performance of the considered models on structural configurations observed during training as well as on previously unseen configurations. It also examines model performance under different levels of structural dependency and different amounts of training data.
 
-\item \textbf{Chapter~6} analyses the experimental results, with particular emphasis on the relationship between structural dependency, generalization performance, logical satisfaction, data efficiency, and computational characteristics.
+\item \textbf{Chapter~6} analyses the experimental results, with particular emphasis on the relationship between structural dependency, generalization performance, logical satisfaction, and the amount of training data required to achieve comparable performance.
 
 \item \textbf{Chapter~7} discusses the findings in relation to the research questions and hypotheses. Particular attention is given to identifying the conditions under which explicit structural reasoning provides measurable benefits, as well as the conditions under which its contribution is limited.
 
