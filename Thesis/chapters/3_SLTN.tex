@@ -1,4 +1,109 @@
 \chapter{Structural Logic Tensor Networks}
 \label{chap:SLTN}
-sLTN in detail: structural dimensions, structural variables/relations, syntax, semantics, tensor interpretation
-\newpage
+
+\noindent
+Structural Logic Tensor Networks (sLTN) extend the Logic Tensor Network (LTN) framework by introducing an explicit representation of the structural organization of data. While the original LTN framework provides a differentiable logical language for reasoning over collections of individuals, many learning problems involve additional organization such as temporal order, sequence position, spatial structure, or graph connectivity. In such settings, the relationships between positions in the data may be part of the knowledge that the model needs to reason about. sLTN addresses this aspect by making structural organization an explicit component of the logical language \cite{rinaldi2026sltn}.
+The central idea of sLTN is to introduce structural dimensions as first-class elements of the language. Structural dimensions correspond to named axes of structured data, such as time steps in a temporal sequence, positions in a sequence, or nodes in a graph. Structural variables can then range over these dimensions, while structural relations describe relationships between different structural positions. This allows logical formulas to refer not only to ordinary individuals, but also to the organization in which those individuals occur \cite{rinaldi2026sltn}.
+The framework preserves the main principles of LTN. Logical symbols are grounded into tensors or differentiable functions, while logical connectives and quantifiers are interpreted through differentiable fuzzy semantics. Consequently, logical constraints involving structural information can participate in gradient-based learning. In this sense, sLTN does not replace the LTN approach, but extends it to a richer class of structured representations \cite{rinaldi2026sltn}.
+
+\section{Motivation and Limitations of Standard LTN for Structured Data}
+
+\noindent
+The original LTN framework is primarily designed for settings in which data can be represented as collections of individuals. Each individual belongs to a logical domain and can be associated with tensor representations, predicates, functions, and other logical symbols. This formulation is effective when the relationships between individuals are the main source of structure that needs to be represented.
+However, many datasets contain an additional organization that cannot be naturally described only in terms of independent individuals. Examples include temporal sequences, where observations are ordered in time; token sequences, where the position of an element is meaningful; and graphs, where the connectivity between nodes determines the structure of the data. In such cases, structural information is not simply an implementation detail of the tensor representation. It can influence the meaning of a logical statement itself \cite{rinaldi2026sltn}.
+For example, consider a sequence of observations indexed by time. A property holding at time $t$ may be related to the property holding at the following time step $t'$. Expressing such a constraint requires the logical language to refer explicitly to the temporal relationship between the two positions. Similarly, in a graph, a property associated with one node may need to be related to the properties of its neighboring nodes.
+One possible approach is to encode these relationships indirectly using ordinary first-order individuals and predicates. However, this treats structural organization as part of the domain representation rather than as an explicit component of the logical language. sLTN instead introduces structural dimensions and structural relations so that these forms of organization can be directly represented and manipulated within logical formulas \cite{rinaldi2026sltn}.
+This distinction is particularly important for the study developed in this thesis. If structural organization can be explicitly represented in the logical language, it becomes possible to investigate whether such an explicit representation provides an advantage when a model is required to generalize to previously unseen structural configurations. The purpose of sLTN is therefore not only to represent structured data, but also to provide a formal mechanism through which structural information can participate in differentiable logical reasoning.
+
+\section{Structural Dimensions}
+
+\noindent
+A structural dimension is a named dimension associated with a particular organization of data. Typical examples include a temporal dimension representing time steps, a sequence dimension representing positions in an ordered sequence, or a graph dimension representing nodes. Structural dimensions therefore provide an explicit representation of the axes along which structured data are organized \cite{rinaldi2026sltn}.
+In sLTN, structural dimensions are part of the formal signature of the language. The signature extends the standard components of a many-sorted first-order language with a set of structural dimensions and structural variables. The dimensional profile associated with a symbol specifies which structural dimensions are relevant to its tensorial representation.
+This mechanism establishes a direct relationship between the logical representation and the underlying tensor representation. A tensor may contain one or more axes corresponding to structural dimensions, and these axes are explicitly named and tracked by the framework. Structural information can consequently be used when expressions are aligned, selected, masked, or aggregated.
+For example, suppose that a video is represented as a sequence of frames. A temporal dimension $T$ can be associated with the sequence of frames. A tensor representing a batch of videos may then contain an axis corresponding to $T$. Rather than treating this axis as an anonymous tensor dimension, sLTN associates it with a named structural dimension that can be referenced by logical expressions.
+This representation is important because the same tensor shape can have different meanings depending on the organization represented by its axes. An axis representing time is conceptually different from an axis representing image width, even if both are represented numerically as tensor dimensions. sLTN therefore makes the relevant structural organization explicit within its language and semantics \cite{rinaldi2026sltn}.
+
+\section{Structural Variables}
+\noindent
+Structural variables are used to refer to individual positions of a structural dimension. They are distinct from ordinary first-order variables.
+An ordinary first-order variable ranges over individuals belonging to a declared logical sort. For example, a variable $x$ of sort $\mathit{Image}$ may range over images in a dataset. A structural variable, in contrast, ranges over positions associated with a structural dimension. If $t$ is associated with a temporal dimension, it can represent a particular position in time.
+This distinction allows a formula to simultaneously refer to an individual and to the structural position in which that individual is observed. For example, a property can be associated with an object $x$ at time $t$, and another property can be associated with the same object at a different time $t'$.
+Structural variables can also be quantified. Consequently, the language can express statements over all or selected positions of a structural dimension. This is particularly useful when the logical constraint depends on the organization of multiple positions rather than on a single observation.
+The distinction between first-order and structural variables is therefore one of the fundamental elements introduced by sLTN. First-order variables describe the entities being reasoned about, whereas structural variables describe where those entities occur within an explicitly represented structure \cite{rinaldi2026sltn}.
+
+\section{Structural Relations}
+\noindent
+Structural dimensions provide a way to identify positions, but structured reasoning also requires a mechanism for expressing relationships between those positions. sLTN introduces structural relations for this purpose.
+A structural relation connects elements of one or more structural dimensions. These relations may represent properties such as temporal adjacency, sequence ordering, or graph connectivity. They are interpreted as Boolean or fuzzy masks over structural dimensions and can therefore be integrated into the differentiable semantics of the framework \cite{rinaldi2026sltn}.
+A simple example is the temporal relation $\mathit{next}(t,t')$, which identifies pairs of consecutive positions in a temporal dimension. This relation can be used to express a constraint such as
+
+$$
+\forall t,t' \mid \mathit{next}(t,t') :
+\left(A(x,t) \rightarrow A(x,t')\right).
+$$
+\noindent
+The formula states that whenever the relation $\mathit{next}(t,t')$ holds, the property $A$ should be preserved from one temporal position to the next. The important aspect of this formulation is that temporal adjacency is represented directly by the structural relation rather than being implicitly encoded by the neural architecture \cite{rinaldi2026sltn}.
+Structural relations are therefore the mechanism through which dependencies between positions become accessible to logical reasoning. The same principle can be applied to other structures. For a graph, for example, a relation could identify neighboring nodes. For a sequence, it could represent consecutive positions or another predefined ordering.
+Because structural relations can be Boolean or fuzzy, they can also be incorporated into the differentiable semantics of sLTN. This allows structural knowledge to be used together with learned representations rather than requiring a completely symbolic preprocessing stage.
+
+\section{Syntax and Semantics}
+
+\noindent
+The formal language of sLTN extends a many-sorted first-order signature with structural components. The signature contains sorts, dimensions, constants, individual variables, functions, predicates, structural variables, and structural relations. In addition, typing information specifies the structural dimensions associated with symbols and the dimensions consumed or produced by functions and predicates \cite{rinaldi2026sltn}.
+The framework separates the syntactic description of a theory from its tensorial interpretation. Symbols are first declared in a signature. Formulas are then constructed and checked against this signature before concrete tensor representations are assigned through an interpretation.
+This separation is relevant for two reasons. First, it makes the logical structure of a theory explicit independently of the particular tensors used during learning. Second, it allows structural information to be checked at the level of the language. Function and predicate applications must be compatible with their declared sorts and structural profiles, while structural annotations and quantifiers must refer to appropriate structural variables and dimensions \cite{rinaldi2026sltn}.
+The concrete syntax of sLTN provides logical operators and quantifiers in both symbolic and textual forms. In addition to ordinary first-order quantification, the language supports structural quantification. This allows formulas to quantify explicitly over positions belonging to structural dimensions.
+The resulting framework can therefore express formulas in which ordinary logical entities and structural positions coexist. A formula can describe a property of an individual, constrain the property across different structural positions, or condition a statement on a structural relation between those positions.
+
+\section{Tensor Representation and Named Axes}
+
+\noindent
+A central characteristic of sLTN is that structural information is directly connected to tensor dimensions. The framework interprets terms and formulas as annotated tensors whose axes may correspond to ordinary variables, structural dimensions, and domain dimensions \cite{rinaldi2026sltn}.
+Consider again a collection of videos represented by a tensor. If a batch contains $32$ videos, each consisting of $8$ frames, the corresponding tensor may contain a batch axis, a temporal structural axis, and image-domain axes. The temporal axis is explicitly associated with a structural dimension such as $T$.
+The use of named structural axes allows expressions to be aligned according to their semantic dimensions rather than relying only on their numerical tensor positions. This is particularly relevant when formulas combine expressions carrying different structural profiles.
+Structural operations can therefore include alignment, broadcasting, selection, masking, and aggregation along explicitly identified axes. The resulting semantics provides a bridge between the logical representation of structure and its tensorial implementation.
+This design also preserves compatibility with ordinary LTN representations. If no structural dimensions are associated with an expression, the corresponding tensorial interpretation reduces to the unstructured case. More generally, sLTN is designed so that when structural dimensions are absent, the original LTN semantics is recovered as a special case \cite{rinaldi2026sltn}.
+
+\section{Logical Reasoning over Structural Information}
+
+\noindent
+The introduction of structural dimensions and structural relations extends the types of constraints that can be expressed within the logical language. In standard LTN, logical formulas can describe relationships between individuals and constrain their learned representations. sLTN additionally allows these formulas to refer to the organization of the underlying data.
+This makes it possible to express constraints involving temporal persistence, sequence dependencies, or relationships between connected structural positions. A structural relation acts as a logical condition identifying which combinations of positions should be considered related.
+For example, let $A(x,t)$ denote a property of an individual $x$ at temporal position $t$. A persistence constraint can be expressed using a relation $\mathit{next}(t,t')$:
+
+$$
+\forall t,t' \mid \mathit{next}(t,t') :
+\left(A(x,t) \rightarrow A(x,t')\right).
+$$
+\noindent
+The structural relation determines where the logical implication is applied. Consequently, the formula does not simply require $A$ to hold independently at all positions. Instead, it specifies a relationship between the truth of $A$ at two structurally connected positions.
+The same mechanism can represent more general structural dependencies. For instance, if a property depends on the order of elements in a sequence, the logical theory can refer to the corresponding structural positions and relations between them. In a graph setting, a relation describing adjacency can determine which nodes participate in a particular logical constraint.
+The resulting representation provides a direct way to combine learned representations with explicit structural knowledge. Logical constraints can still be optimized through differentiable fuzzy semantics, but the constraints themselves can now depend on the organization of the structured input \cite{rinaldi2026sltn}.
+
+\section{Temporal Structures as a Case Study}
+
+\noindent
+Temporal data provide a natural example of the motivation behind sLTN because temporal order is an intrinsic part of the representation. The sLTN paper uses a video classification example in which a temporal dimension represents the sequence of frames in a video \cite{rinaldi2026sltn}.
+In this setting, a video can be associated with a structural dimension $T$, whose positions correspond to individual frames. A frame can therefore be represented not only by its visual content but also by its position along the temporal dimension.
+A structural relation such as $\mathit{next}(t,t')$ can then identify consecutive frames. Logical formulas can use this relation to impose constraints across adjacent positions. For example, if a property is expected to persist through consecutive frames, this dependency can be expressed explicitly using the temporal relation.
+This example illustrates the main conceptual difference introduced by sLTN. The temporal organization is not left exclusively to the neural architecture. Instead, it becomes accessible to the logical language and can therefore be used when defining differentiable logical constraints.
+The temporal case is particularly relevant to the research question of this thesis because sequences provide a controlled environment in which structural organization can be manipulated independently from the underlying individual elements. This makes it possible to study whether explicitly representing structural information affects the ability of a neurosymbolic model to generalize to structural configurations that were not observed during training.
+
+\section{Relationship between LTN and sLTN}
+
+\noindent
+sLTN should be understood as an extension of LTN rather than as a separate alternative framework. Both approaches rely on the same general neurosymbolic principle: logical expressions are grounded into differentiable tensorial representations, and logical constraints are evaluated using fuzzy semantics so that they can participate in gradient-based optimization \cite{badreddine2022logic,rinaldi2026sltn}.
+The main difference concerns the representation of structure. Standard LTN provides a logical language for reasoning over individuals and their relationships, whereas sLTN introduces structural dimensions, structural variables, and structural relations as explicit components of the language.
+This distinction can also be understood in terms of the tensor representation. In standard LTN, tensor dimensions primarily represent the data required to ground logical entities. In sLTN, selected dimensions can additionally be given an explicit structural meaning. Their role can then be referenced by the logical language.
+An important consequence is that the original LTN setting remains available as a special case. When no structural dimensions are used, the additional structural machinery is absent and the framework recovers the corresponding unstructured LTN semantics \cite{rinaldi2026sltn}.
+This relationship is relevant for experimental comparison because it makes it possible to investigate the effect of explicit structural representation while keeping the underlying neurosymbolic paradigm consistent. The key question is therefore not whether sLTN constitutes a fundamentally different learning framework, but whether making structural information explicit produces measurable differences when the learning problem depends on such information.
+
+\section{Limitations and Open Issues of sLTN}
+
+\noindent
+Although sLTN introduces a formal mechanism for representing structural information, the framework is presented as an initial framework and software library rather than as a fully validated solution for structured neurosymbolic learning. The authors explicitly identify the need for further stabilization, testing, and systematic empirical validation beyond the illustrative examples presented in the paper \cite{rinaldi2026sltn}.
+Several directions are identified as future work. One concerns the development of dedicated structured theories for concrete application domains, in which domain-specific objects, predicates, dimensions, and structural relations can be defined systematically. Another concerns extensions of the language with finitely recursive computational primitives while preserving differentiability and a well-defined tensor semantics.
+The paper also identifies the need for principled strategies for selecting or scheduling the power-mean exponent used in aggregation, with the objective of improving training stability and supporting more systematic hyperparameter selection. Further work is proposed on benchmarking the library components and comparing sLTN with alternative approaches for relational, temporal, spatial, and graph-based learning \cite{rinaldi2026sltn}.
+These open issues are particularly relevant to the present thesis. The introduction of explicit structural representations provides a formal mechanism for reasoning about structured data, but the empirical conditions under which this representation is actually beneficial remain an open question. In particular, the existence of a structural language does not by itself establish that explicit structural reasoning improves generalization or reduces the amount of data required for learning.
+The following chapter therefore moves from the formal framework to an empirical investigation. Rather than assuming that structural representations are always advantageous, the experimental methodology is designed to examine whether their effect depends on the degree to which the target task relies on structural information and on the availability of training data.
