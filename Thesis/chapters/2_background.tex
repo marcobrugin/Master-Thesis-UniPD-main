@@ -1,4 +1,242 @@
 \chapter{Theoretical Background}
 \label{chap:background}
-Neurosymbolic AI, FOL, fuzzy logic, LTN, learning with logical constraints, structured data
-\newpage
+
+\noindent
+This chapter introduces the theoretical concepts underlying the research presented in this thesis. It first discusses neurosymbolic artificial intelligence and the complementary roles of neural and symbolic approaches. The logical foundations required for Logic Tensor Networks are then introduced, followed by fuzzy and differentiable semantics. The chapter subsequently presents Logic Tensor Networks (LTN) and Structural Logic Tensor Networks (sLTN), with particular attention to the representation of structural information. Finally, the concepts of systematic generalization and structural dependency are introduced to motivate the research question investigated in this thesis.
+
+\section{Neurosymbolic Artificial Intelligence}
+
+\noindent
+Artificial intelligence has developed through different approaches to learning and knowledge representation. Sub-symbolic methods, particularly neural networks, learn numerical representations from data and have demonstrated strong capabilities in tasks involving complex and high-dimensional observations. Symbolic approaches, in contrast, represent knowledge explicitly through symbols, logical rules, and structured relationships.
+These approaches provide different advantages. Neural models can learn representations directly from examples, but their ability to generalize to configurations that differ systematically from those observed during training is not guaranteed \cite{lake2018generalization}. Symbolic systems provide explicit representations of knowledge and relationships, but traditional symbolic methods are not naturally designed to learn directly from noisy or high-dimensional data.
+\\
+Neurosymbolic artificial intelligence aims to combine these two paradigms by integrating neural learning with symbolic knowledge and reasoning \cite{garcez2022neurosymbolic}. The general objective is to exploit the representational and learning capabilities of neural models while retaining the ability to express structured knowledge explicitly.
+Logic Tensor Networks follow this approach by combining first-order logical representations with differentiable tensor computation. Logical symbols are grounded into numerical representations and differentiable functions, allowing logical knowledge to participate directly in learning \cite{badreddine2022logic}.
+
+\noindent
+This perspective is particularly relevant when the information required to solve a task includes relationships between observations. In such cases, the question is not only whether a model can learn from the observed data, but also whether it can represent and apply relationships to configurations that were not directly observed during training.
+
+\section{First-Order Logic}
+
+\noindent
+First-order logic (FOL) provides the formal language underlying Logic Tensor Networks. It allows knowledge to be expressed in terms of individuals, properties, relations, functions, and quantifiers.
+A first-order language contains non-logical symbols such as constants, functions, and predicates. Constants refer to individuals in a domain, while predicates express properties or relations involving these individuals. For example,
+
+$$
+P(x)
+$$
+can represent a property of an individual $x$, whereas
+
+$$
+R(x,y)
+$$
+can represent a relation between two individuals $x$ and $y$.
+First-order logic also provides logical connectives and quantifiers. \\
+The universal quantifier
+
+$$
+\forall x
+$$
+\noindent
+expresses that a formula holds for every relevant individual, while the existential quantifier
+
+$$
+\exists x
+$$
+expresses that it holds for at least one individual.
+\noindent
+\\
+These elements can be combined into more complex formulas. For instance,
+
+$$
+\forall x \left(P(x) \rightarrow Q(x)\right)
+$$
+\noindent
+expresses that every individual satisfying $P$ also satisfies $Q$.
+
+\noindent
+The relevance of first-order logic to neurosymbolic learning lies in its ability to represent relationships explicitly. Rather than considering observations independently, a logical theory can describe properties and relations that should hold across multiple individuals. LTN uses this logical structure while replacing classical truth evaluation with a differentiable many-valued interpretation \cite{badreddine2022logic}.
+
+\section{Fuzzy Logic and Differentiable Semantics}
+
+\noindent
+Classical logic assigns binary truth values to formulas. LTN instead employs a many-valued semantics in which formulas receive values in the continuous interval
+
+$$
+[0,1].
+$$
+\noindent
+A value close to $1$ represents a high degree of truth, whereas a value close to $0$ represents a low degree of truth. Intermediate values allow formulas to be partially satisfied.
+\noindent
+This continuous representation makes it possible to associate logical operators with differentiable functions. Logical connectives can be implemented through fuzzy operators, while quantified formulas can be evaluated through aggregation mechanisms over their grounded instances \cite{badreddine2022logic}.
+\noindent
+For a formula $\varphi$, its interpretation can therefore be written as
+
+$$
+\mathcal{G}(\varphi) \in [0,1].
+$$
+\noindent 
+Because the resulting operations are differentiable, the truth value of a logical formula can depend on learnable parameters and can consequently be incorporated into gradient-based optimization.
+
+\noindent
+The specific choice of fuzzy operators is relevant to the behaviour of differentiable logical systems. Different operators can have different mathematical and optimization properties, which can affect the resulting learning dynamics \cite{vankrieken2022fuzzy}.
+\noindent \\
+In the context of this thesis, this observation motivates keeping the logical semantics fixed across the experimental conditions whenever possible. The objective is to investigate the effect of structural representation rather than differences caused by alternative fuzzy operators.
+
+\section{Logic Tensor Networks}
+
+\noindent
+Logic Tensor Networks (LTN) provide a framework for combining first-order logic with differentiable tensor computation. The framework, developed from earlier work on learning and reasoning with Logic Tensor Networks \cite{serafini2016learning}, provides differentiable interpretations of logical symbols and formulas \cite{badreddine2022logic}.
+\noindent\\
+The central mechanism is \textit{grounding}. Logical symbols are associated with numerical representations or differentiable functions. A constant representing an individual can, for example, be grounded into a vector, while a predicate can be grounded into a function that evaluates the degree to which its arguments satisfy the corresponding property or relation.
+\noindent\\
+For a unary predicate $P$, its grounding can be represented abstractly as
+
+$$
+G(P):\mathbb{R}^{d}\rightarrow[0,1].
+$$
+\noindent\\
+For a binary relation $R$, the corresponding grounding can be written as
+
+$$
+G(R):\mathbb{R}^{d}\times\mathbb{R}^{d}\rightarrow[0,1].
+$$
+\noindent\\
+The output represents the degree to which the corresponding predicate or relation is satisfied.
+
+\noindent
+Once logical symbols have been grounded, complete formulas can be evaluated using the differentiable semantics introduced above. Consequently, a logical theory
+
+$$
+\mathcal{T}=\{\varphi_1,\ldots,\varphi_n\}
+$$
+\noindent\\
+can be associated with degrees of satisfaction for its constituent formulas. Learning can then be formulated as the optimization of an objective that encourages the desired logical constraints to be satisfied.
+\noindent\\
+Conceptually, this can be expressed as
+
+$$
+\max_{\theta}\mathrm{Sat}_{\theta}(\mathcal{T}),
+$$
+\noindent\\
+where $\theta$ denotes the learnable parameters and $\mathrm{Sat}_{\theta}(\mathcal{T})$ represents the degree of satisfaction of the theory under the current interpretation.
+\noindent\\
+This formulation allows logical knowledge to influence learning rather than being used only as a post-training verification mechanism. Neural representations and logical constraints are therefore optimized within the same differentiable framework \cite{badreddine2022logic}.
+
+\section{Structural Information in Learning}
+
+\noindent
+Many learning problems involve data whose organization contributes to its meaning. A temporal sequence is a simple example. Given
+
+$$
+x_1 \rightarrow x_2 \rightarrow x_3,
+$$
+\noindent\\
+the observations are not merely an unordered collection: their positions define relationships between them. The same distinction appears in other structured domains, such as graphs, where connections between entities form part of the information relevant to the task.
+\noindent\\
+This creates a representational issue for learning systems. If the target concept depends on the organization of the observations, representing the individual observations alone may not provide an explicit representation of the relevant relationships.
+\noindent\\
+The original LTN framework provides a mechanism for representing logical relations between individuals, but does not explicitly introduce structural dimensions such as sequence positions as separate elements of the logical language. Structural Logic Tensor Networks (sLTN) extend the framework in this direction by making structural dimensions explicit \cite{rinaldi2026sltn}.
+
+\section{Structural Logic Tensor Networks}
+
+\noindent
+Structural Logic Tensor Networks (sLTN) extend LTN by treating structural dimensions as first-class elements of the framework. A structural dimension can represent an axis associated with the organization of data, such as temporal steps or sequence positions \cite{rinaldi2026sltn}.
+\noindent\\
+The framework introduces structural variables and structural relations in addition to ordinary logical variables and relations. While ordinary variables range over individuals, structural variables range over positions within a structural dimension. Structural relations can then describe relationships between these positions.
+\noindent\\
+For a temporal structure, for example, a relation such as
+
+$$
+\mathrm{next}(t,t')
+$$
+\noindent
+can represent the fact that position $t'$ immediately follows position $t$ \cite{rinaldi2026sltn}.
+\noindent\\
+This distinction allows logical formulas to refer explicitly to the organization of the data. A formula can therefore express not only that an entity has a certain property, but also that the property occurs at a position related to another position according to the structure being represented.
+\noindent\\
+sLTN preserves the differentiable semantics of LTN while extending the representation with structural information. Importantly, when structural dimensions are not used, the framework can recover the original LTN setting \cite{rinaldi2026sltn}. This makes the two frameworks naturally comparable in an experimental setting.
+
+\noindent
+The introduction of structural representations, however, does not imply that they must improve performance in every task. If a target can be determined without considering structural relationships, explicitly representing those relationships may provide little additional information. The potential benefit of sLTN should therefore depend on the role that structure plays in the task.
+
+\section{Systematic Generalization}
+
+\noindent
+A central concept for the experimental setting of this thesis is \textit{systematic generalization}. In supervised learning, a model can achieve high performance on test examples that resemble its training examples without necessarily demonstrating that it can apply learned relationships to novel configurations.
+\noindent\\
+Lake and Baroni studied this issue using the SCAN benchmark, which evaluates sequence-to-sequence models on combinations of commands that can differ from those observed during training. Their results demonstrated that good performance on familiar configurations does not necessarily imply systematic generalization to novel combinations \cite{lake2018generalization}.
+\noindent\\
+The distinction is relevant to the present work because structural generalization can be evaluated by deliberately separating the structural configurations encountered during training from those used at test time.
+\\
+For example, a model could be trained using sequences such as
+
+$$
+A\rightarrow B\rightarrow C
+$$
+
+and
+
+$$
+A\rightarrow B\rightarrow D,
+$$
+
+while being evaluated on configurations such as
+
+$$
+A\rightarrow C\rightarrow B\rightarrow D.
+$$
+\noindent \\
+The individual elements may already be familiar to the model, while their structural arrangement is new.
+
+\noindent
+In this thesis, \textit{structural generalization} is used as an operational term for this experimental condition: the ability of a model to generalize from structural configurations observed during training to previously unseen configurations at test time.
+\noindent \\
+This definition is intentionally specific to the experimental setting of the thesis. It provides a measurable distinction between performance on familiar structural configurations and performance on novel ones, without assuming that structural generalization constitutes a separate established theoretical category in the literature.
+
+\section{Structural Dependency}
+
+\noindent
+The potential usefulness of explicit structural representations depends on whether the target task actually requires structural information.
+\\
+Consider two sequence-based classification tasks. In the first, the target depends only on which elements occur in the sequence. The order of those elements does not affect the correct output. In the second, the target depends on the relative position or ordering of elements. In this case, information about the sequence structure is necessary to determine the target.
+\\
+This thesis refers to this distinction as \textit{structural dependency}. Structural dependency describes the extent to which solving a task requires information about relationships involving positions, order, or other structural properties of the input.
+\\
+A task with low structural dependency can be solved primarily from properties of individual observations. A task with high structural dependency requires information about how those observations are organized.
+
+\noindent
+This distinction is important for evaluating sLTN because it provides a controlled way of asking when explicit structural representation should matter. If structure is irrelevant to the target, an explicit structural representation is not expected to provide substantial additional information. Conversely, when the target directly depends on structural relationships, representing those relationships explicitly may provide a more direct correspondence between the model representation and the task.
+\\
+Structural dependency is therefore treated as an experimental factor rather than as an assumption about the superiority of one model over another.
+
+\section{Structural Generalization and Data Availability}
+
+\noindent
+The amount of training data provides a second factor that may affect the ability of a model to learn structural relationships. With more training examples, a model may encounter a larger variety of structural configurations. With fewer examples, it has less opportunity to learn such configurations directly from the data.
+\\
+Logical constraints provide an alternative source of information because they can express relationships that are not limited to individual training examples \cite{badreddine2022logic}. However, the presence of such constraints does not automatically guarantee improved data efficiency. Their usefulness depends on their relevance to the task and on how they interact with the learning objective.
+\\
+For this reason, training-data availability is treated as a secondary factor in the experiments. The primary focus remains structural generalization, while different amounts of training data are used to investigate whether the effect of explicit structural representation changes when fewer examples are available.
+\\
+The relevant notion of data efficiency in this thesis is therefore statistical: the amount of training data required to obtain a given level of generalization performance. It does not refer to computational efficiency or training time.
+
+\section{Research Gap}
+
+\noindent
+The theoretical background presented above establishes three relevant observations.
+\\
+First, Logic Tensor Networks provide a differentiable framework in which first-order logical knowledge can be combined with neural representations and used directly during learning \cite{badreddine2022logic}.
+\\
+Second, sLTN extends this framework by making structural dimensions and structural relations explicit, providing a representation for information such as sequence positions and temporal relationships \cite{rinaldi2026sltn}.
+\\
+Third, research on systematic generalization shows that successful learning on familiar configurations does not necessarily imply successful generalization to novel configurations \cite{lake2018generalization}.
+\\
+Taken together, these observations motivate a more specific empirical question. The availability of an explicit structural representation does not by itself establish when such a representation produces a measurable advantage in generalization.
+\\
+In particular, it remains relevant to investigate whether the effect of structural representation depends on the relationship between the target task and the underlying structure, on the novelty of the structural configurations encountered at test time, and on the amount of training data available.
+
+\noindent
+This thesis addresses this problem through a controlled comparison between a neural baseline, conventional LTN, and sLTN. The experiments vary structural dependency and the degree of structural novelty between training and testing, while training-data availability is considered as a secondary factor.
+\\
+The objective is therefore not to assume that sLTN is universally superior to conventional LTN or to neural models. Instead, the objective is to determine the conditions under which explicit structural representation contributes to generalization and to characterize situations in which its contribution is limited.

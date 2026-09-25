@@ -12,15 +12,16 @@
 ]
 
 % Articles and papers bibliography
+\defbibfilter{articlesandpapers}{
+    type=article or
+    type=inproceedings or
+    type=misc
+}
+
 \printbibliography[
     heading=subbibliography,
     title={Articles and papers},
-    type=article
-]
-
-\printbibliography[
-    heading=none,
-    type=misc
+    filter=articlesandpapers
 ]
 
 % Websites bibliography
