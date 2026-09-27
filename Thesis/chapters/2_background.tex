@@ -10,7 +10,7 @@ This chapter introduces the theoretical concepts underlying the research present
 Artificial intelligence has developed through different approaches to learning and knowledge representation. Sub-symbolic methods, particularly neural networks, learn numerical representations from data and have demonstrated strong capabilities in tasks involving complex and high-dimensional observations. Symbolic approaches, in contrast, represent knowledge explicitly through symbols, logical rules, and structured relationships.
 These approaches provide different advantages. Neural models can learn representations directly from examples, but their ability to generalize to configurations that differ systematically from those observed during training is not guaranteed \cite{lake2018generalization}. Symbolic systems provide explicit representations of knowledge and relationships, but traditional symbolic methods are not naturally designed to learn directly from noisy or high-dimensional data.
 \\
-Neurosymbolic artificial intelligence aims to combine these two paradigms by integrating neural learning with symbolic knowledge and reasoning \cite{garcez2022neurosymbolic}. The general objective is to exploit the representational and learning capabilities of neural models while retaining the ability to express structured knowledge explicitly.
+Neurosymbolic artificial intelligence aims to combine these two paradigms by integrating neural learning with symbolic knowledge and reasoning \cite{garcez2023neurosymbolic}. The general objective is to exploit the representational and learning capabilities of neural models while retaining the ability to express structured knowledge explicitly.
 Logic Tensor Networks follow this approach by combining first-order logical representations with differentiable tensor computation. Logical symbols are grounded into numerical representations and differentiable functions, allowing logical knowledge to participate directly in learning \cite{badreddine2022logic}.
 
 \noindent
@@ -234,9 +234,8 @@ Third, research on systematic generalization shows that successful learning on f
 \\
 Taken together, these observations motivate a more specific empirical question. The availability of an explicit structural representation does not by itself establish when such a representation produces a measurable advantage in generalization.
 \\
-In particular, it remains relevant to investigate whether the effect of structural representation depends on the relationship between the target task and the underlying structure, on the novelty of the structural configurations encountered at test time, and on the amount of training data available.
-
-\noindent
-This thesis addresses this problem through a controlled comparison between a neural baseline, conventional LTN, and sLTN. The experiments vary structural dependency and the degree of structural novelty between training and testing, while training-data availability is considered as a secondary factor.
+In particular, it remains relevant to investigate whether the effect of structural representation depends on the relationship between the target task and the underlying structure, on whether the structural configurations encountered at test time were observed during training, and on the amount of training data available.
+\\
+This thesis addresses this problem through a controlled comparison between a neural baseline, conventional LTN, and sLTN. The experiments vary structural dependency and distinguish between structural configurations observed during training and previously unseen configurations at test time, while training-data availability is considered as a secondary factor.
 \\
 The objective is therefore not to assume that sLTN is universally superior to conventional LTN or to neural models. Instead, the objective is to determine the conditions under which explicit structural representation contributes to generalization and to characterize situations in which its contribution is limited.

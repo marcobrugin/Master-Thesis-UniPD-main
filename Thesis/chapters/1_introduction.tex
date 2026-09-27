@@ -78,7 +78,6 @@ The central research problem can therefore be formulated as follows:
 
 \noindent
 The experimental analysis is designed to identify conditions under which explicit structural representations provide a measurable benefit, as well as conditions in which their contribution is limited. This allows the study to characterize the role of structural reasoning rather than simply comparing the overall predictive performance of different models.
-
 \section{Research Questions}
 
 \noindent
@@ -86,49 +85,22 @@ The main objective of this thesis is to investigate the conditions under which e
 
 \begin{itemize}
 
-
 \item \textbf{RQ1 --- Structural Generalization.}
 
 To what extent does explicit structural reasoning affect the generalization of neurosymbolic models to previously unseen structural configurations?
 
-\item \textbf{RQ2 --- LTN and sLTN Comparison.}
+\item \textbf{RQ2 --- Model Comparison.}
 
-How does the generalization performance of sLTN compare with that of conventional LTN when the structural configurations encountered during testing differ from those observed during training?
+How does the performance of a Structural Logic Tensor Network compare with that of a conventional Logic Tensor Network and a neural baseline when generalizing to previously unseen structural configurations?
 
 \item \textbf{RQ3 --- Conditions for Structural Benefit.}
 
-How does the benefit of explicit structural reasoning vary with the structural dependency of the task and the amount of available training data?
-
+How does the effect of explicit structural reasoning vary with the degree of structural dependency of the task and the amount of available training data?
 
 \end{itemize}
 
 \noindent
 These research questions are addressed through a controlled experimental evaluation involving a neural baseline, a conventional Logic Tensor Network, and a Structural Logic Tensor Network incorporating explicit structural dimensions and relations.
-
-\section{Research Hypotheses}
-
-\noindent
-Based on the research questions introduced in the previous section, this thesis formulates the following hypotheses to be empirically investigated:
-
-\begin{itemize}
-
-\item \textbf{H1 --- Structural Generalization.}
-
-Explicit structural representations are expected to improve generalization to previously unseen structural configurations when the target task depends on structural relationships.
-
-\item \textbf{H2 --- Structural Dependency.}
-
-The relative benefit of explicit structural reasoning is expected to increase with the degree of structural dependency of the task. Conversely, when the target task can be solved primarily from local or non-structural information, the difference between models with and without explicit structural representations is expected to be smaller.
-
-\item \textbf{H3 --- Data Efficiency.}
-
-The benefit of explicit structural reasoning is expected to become more pronounced when the amount of available training data is reduced, particularly for tasks that strongly depend on structural relationships.
-
-
-\end{itemize}
-
-\noindent
-These hypotheses are formulated as empirical research hypotheses rather than assumptions about the superiority of sLTN. The experimental evaluation therefore considers both scenarios in which explicit structural reasoning provides a measurable benefit and scenarios in which its contribution is limited or absent. The objective is to identify the conditions associated with a structural advantage rather than to establish a priori that one model is universally superior to another.
 
 \section{Contributions of the Thesis}
 
@@ -149,16 +121,14 @@ The remainder of this thesis is organized as follows:
 \item \textbf{Chapter~2} introduces the theoretical background required for the study, including neurosymbolic learning, first-order logic, fuzzy logic, Logic Tensor Networks, and the principles underlying structured data representations.
 
 \item \textbf{Chapter~3} presents the Structural Logic Tensor Network framework in greater detail, focusing on its syntax, semantics, structural dimensions, structural variables, structural relations, and tensorial interpretation.
-
-\item \textbf{Chapter~4} describes the research methodology adopted in this thesis. It introduces the experimental task and dataset, the considered models, the structural configurations used during training and testing, the different levels of structural dependency, the amounts of training data considered, the evaluation metrics, and the experimental protocols used to address the research questions.
+\item \textbf{Chapter~4} describes the research methodology adopted in this thesis. It introduces the experimental task, the considered models, the structural configurations used during training and testing, the different levels of structural dependency, the amounts of training data considered, the evaluation metrics, and the experimental protocols used to address the research questions.
 
 \item \textbf{Chapter~5} presents the experimental evaluation of structural generalization. The chapter investigates the performance of the considered models on structural configurations observed during training as well as on previously unseen configurations. It also examines model performance under different levels of structural dependency and different amounts of training data.
 
-\item \textbf{Chapter~6} analyses the experimental results, with particular emphasis on the relationship between structural dependency, generalization performance, logical satisfaction, and the amount of training data required to achieve comparable performance.
+\item \textbf{Chapter~6} analyses the experimental results, with particular emphasis on the relationship between structural dependency, model performance, structural generalization, and training data availability.
 
 \item \textbf{Chapter~7} discusses the findings in relation to the research questions and hypotheses. Particular attention is given to identifying the conditions under which explicit structural reasoning provides measurable benefits, as well as the conditions under which its contribution is limited.
 
 \item \textbf{Chapter~8} summarizes the main findings of the thesis, discusses its limitations, and outlines directions for future research, including the potential extension of the experimental analysis to additional structured domains and neurosymbolic learning settings.
-
 
 \end{itemize}

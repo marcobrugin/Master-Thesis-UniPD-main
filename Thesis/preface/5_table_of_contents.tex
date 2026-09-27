@@ -14,16 +14,19 @@
     \renewcommand{\listfigurename}{List of figures}
     \pdfbookmark{\listfigurename}{lof}
     \listoffigures
-    \vspace*{8ex}
+   
+    \pagebreak
     % Tables list
     \phantomsection
     \renewcommand{\listtablename}{List of tables}
     \pdfbookmark{\listtablename}{lot}
     \listoftables
+    \pagebreak
     % Listings list
     \phantomsection
     \renewcommand{\lstlistlistingname}{List of listings}
     \addcontentsline{toc}{chapter}{\lstlistlistingname}
     \lstlistoflistings
+    \pagebreak
 \endgroup
 \cleardoublepage
