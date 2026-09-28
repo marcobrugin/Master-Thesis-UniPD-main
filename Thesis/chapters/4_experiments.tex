@@ -4,16 +4,16 @@
 
 \noindent
 This chapter describes the experimental methodology used to investigate whether and under which conditions explicit structural representations improve the generalization of neurosymbolic learning systems. The experimental design is motivated by the research questions and hypotheses introduced in Chapter~1 and by the distinction between conventional Logic Tensor Networks (LTN) and Structural Logic Tensor Networks (sLTN) discussed in Chapters~2 and~3.
-
+\\
 The central objective is not to assume that sLTN is universally superior to conventional LTN or to neural models. Instead, the experiments are designed to isolate the effect of explicit structural representation by controlling the task, the data distribution, the degree of structural dependency, the novelty of the structural configurations encountered at test time, and the amount of training data.
-
+\\
 The experimental study therefore focuses on three model settings: a conventional neural baseline, an LTN model, and an sLTN model. All three models are evaluated on the same controlled sequence classification problem. The experiments vary the degree to which the target label depends on structural relationships within the sequence and distinguish between structural configurations observed during training and previously unseen configurations at test time.
 
 \section{Experimental Objective and Research Questions}
 
 \noindent
 The main research objective is to determine whether explicitly representing structural information within a neurosymbolic model leads to measurable improvements in structural generalization.
-
+\\
 More specifically, the experiments address the following questions:
 
 \begin{description}
@@ -50,29 +50,29 @@ $$
 
 \noindent
 The symbols $A$, $B$, and $C$ are used to define the class-dependent structural patterns, while the remaining symbols are used as filler elements.
-
+\\
 Each sequence is associated with a binary target label
 
 $$
 y \in \{0,1\}.
 $$
-
+\\
 The important property of the task is that the same basic observations can participate in different classification rules depending on the structural condition being evaluated. In particular, the experiments distinguish between tasks in which the order of elements is irrelevant, tasks in which relative order matters, and tasks in which a specific local structural configuration is required.
-
+\\
 The sequence length and alphabet are kept fixed across all experimental conditions. Only the rule defining the target label and the corresponding structural dependency are varied.
 
 \section{Structural Dependency}
 
 \noindent
 The main independent variable of the experimental design is the degree of structural dependency of the classification task. Three levels are considered: Low, Medium, and High.
-
+\\
 This factor is central to the research questions because the potential benefit of an explicit structural representation should depend on whether the target variable actually requires structural information.
 
 \subsection{Low Structural Dependency}
 
 \noindent
 In the Low condition, the target depends on the presence of two relevant symbols but not on their relative positions.
-
+\\
 A sequence is assigned the positive class when it contains both $A$ and $C$:
 
 $$
@@ -90,17 +90,17 @@ The relative order of $A$ and $C$ is irrelevant. For example, both
 $$
 (A,D,E,C,F,G,H,B)
 $$
-
+\\
 and
 
 $$
 (C,D,A,E,F,G,H,B)
 $$
-
+\\
 satisfy the positive condition.
-
+\\
 The Low condition therefore provides a control setting in which the input contains structural information, but the target classification does not require reasoning about that structure.
-
+\\
 The corresponding implementation used to generate the labels is:
 
 \begin{verbatim}
@@ -128,7 +128,7 @@ $$
 
 \noindent
 The absolute positions of the two symbols are not themselves the target. Instead, the relevant information is the structural relation between them.
-
+\\
 The corresponding implementation is:
 
 \begin{verbatim}
@@ -138,15 +138,15 @@ return int(seq.index("A") < seq.index("C"))
 
 \noindent
 The Medium condition therefore represents an intermediate level of structural dependency. Solving the task requires information that is absent from an unordered representation of the elements.
-
+\\
 In the sLTN formulation, the relevant structural relation can be represented by a relation such as
 
 $$
 before(t,t'),
 $$
-
+\\
 which holds when structural position $t$ precedes structural position $t'$.
-
+\\
 The corresponding logical pattern can conceptually be expressed as
 
 $$
@@ -168,7 +168,7 @@ The High condition requires a more specific local structural configuration. A se
 $$
 A \rightarrow B \rightarrow C.
 $$
-
+\\
 Formally,
 
 $$
@@ -196,7 +196,7 @@ for i in range(len(seq) - 2)
 
 \noindent
 The High condition introduces an explicit local structural dependency. The relevant information is not only the presence of the three symbols or their general order, but their occurrence in three consecutive structural positions.
-
+\\
 In the sLTN formulation, this relationship is represented using the structural relation
 
 $$
@@ -227,7 +227,7 @@ The High condition is consequently intended to represent the strongest form of s
 
 \noindent
 The dataset is generated synthetically in order to provide precise control over the structural properties of the examples. The generator is deterministic given a random seed and explicitly separates training examples from the structural configurations reserved for evaluation.
-
+\\
 Each dependency condition contains three subsets:
 
 \begin{enumerate}
@@ -238,9 +238,9 @@ Each dependency condition contains three subsets:
 
 \noindent
 The training and seen test sets are generated from structural configurations that are available during training, whereas the unseen test set contains structural configurations that are not observed during training.
-
+\\
 Each generated subset contains an equal number of positive and negative examples. In the full-data condition, the generated training set contains 500 examples per class, resulting in 1000 training examples. The seen and unseen evaluation sets contain 500 examples each, resulting in balanced evaluation sets of the same size.
-
+\\
 The resulting basic dataset configuration is therefore:
 
 \begin{table}[ht]
@@ -264,24 +264,24 @@ The exact sequence-generation procedure additionally enforces disjointness betwe
 
 \noindent
 A central aspect of the dataset generator is the use of structural signatures. A structural signature represents the structural configuration relevant to the corresponding dependency condition.
-
+\\
 For the Low and Medium conditions, the signature is based on the positions of the relevant symbols. Missing symbols are represented using a reserved value. For the High condition, the signature identifies the structural location of the controlled local pattern.
-
+\\
 The structural signature is not itself the target label. Instead, it is used to control which configurations are available during training and which are reserved for testing.
-
+\\
 This distinction is important because the experiment is intended to evaluate generalization across structural configurations rather than memorization of individual sequences.
 
 \section{Structural Train--Test Split}
 
 \noindent
 The main generalization manipulation distinguishes between structural configurations observed during training and configurations that are structurally novel at test time.
-
+\\
 The split is performed at the level of structural configurations rather than by independently sampling complete sequences. This ensures that an unseen example can contain familiar symbols and satisfy the same general classification rule while differing in the structural configuration through which that rule must be applied.
-
+\\
 For the Low and Medium conditions, structural signatures are partitioned into training and held-out groups. Examples belonging to the held-out signatures are assigned to the unseen test set.
-
+\\
 For the High condition, the controlled structural pattern is associated with specific positions within the sequence. Some structural positions are used during training, while other positions are reserved for the unseen evaluation condition.
-
+\\
 The resulting distinction can be summarized as follows:
 
 \begin{description}
@@ -300,7 +300,7 @@ This protocol is designed to measure structural generalization rather than ordin
 
 \noindent
 A potential source of experimental leakage would be the presence of identical sequences in more than one dataset partition. The generator therefore explicitly checks exact-sequence disjointness.
-
+\\
 For subsets $S_i$ and $S_j$, the required condition is
 
 $$
@@ -311,7 +311,7 @@ $$
 
 \noindent
 In addition, structural leakage is checked by verifying that configurations assigned to the unseen partition are not present in the training partition.
-
+\\
 These checks are performed automatically before model training. The purpose is to ensure that unseen accuracy measures generalization to structurally held-out configurations rather than memorization of examples appearing in the training set.
 
 \section{Model Configurations}
@@ -332,37 +332,37 @@ The three settings are evaluated on the same generated data and under the same t
 
 \noindent
 The neural baseline provides a reference model without explicit logical reasoning. The sequence is represented numerically and processed by a neural classification architecture producing a scalar probability for the positive class.
-
+\\
 The purpose of this baseline is to determine whether the performance of LTN or sLTN differs from a conventional data-driven neural approach.
-
+\\
 The neural model does not explicitly represent the relations $before$ or $next$ at the logical level.
 
 \subsection{Logic Tensor Network}
 
 \noindent
 The second model is a conventional LTN. It uses the differentiable logical framework described in Chapter~2 but does not introduce explicit structural dimensions and structural relations as part of the logical representation.
-
+\\
 The LTN model therefore provides the most direct comparison with sLTN. Both models belong to the same general neurosymbolic framework, while sLTN additionally exposes structural information to the logical language.
-
+\\
 This comparison is particularly important because a difference between a neural baseline and sLTN alone would not establish that the explicit structural representation is responsible for the effect. The LTN condition provides an intermediate reference point.
 
 \subsection{Structural Logic Tensor Network}
 
 \noindent
 The third model uses the sLTN framework described in Chapter~3. Structural dimensions and structural variables are explicitly associated with the sequence positions.
-
+\\
 The sequence is therefore represented using a structural dimension $T$, while structural variables range over positions in this dimension. Structural relations such as $before$ and $next$ are used to express the relevant dependencies.
-
+\\
 For example, the logical structure used for the Medium condition is based on the relation
 
 $$
 before(t,t')
 $$
-
+\\
 and connects the corresponding symbol predicates at the two structural positions.
-
+\\
 For the High condition, the logical structure connects three positions through the adjacency relation $next$.
-
+\\
 The sLTN objective combines the supervised classification objective with the satisfaction of the structural logical constraints. In simplified form, the training objective can be written as
 
 $$
@@ -373,9 +373,9 @@ $$
 \lambda
 \mathcal{L}_{\mathrm{struct}},
 $$
-
+\\
 where $\mathcal{L}*{\mathrm{sup}}$ is the binary classification loss, $\mathcal{L}*{\mathrm{struct}}$ measures the violation of the structural logical constraints, and $\lambda$ controls the contribution of the structural component.
-
+\\
 The corresponding training principle implemented in the experimental notebook is represented by the following simplified code:
 
 \begin{verbatim}
@@ -394,7 +394,7 @@ The structural loss is therefore part of optimization rather than being used onl
 
 \noindent
 The logical constraints are adapted to the structural dependency of each task.
-
+\\
 For the Low condition, the relevant rule does not require a relationship between two positions. The condition is that an $A$ occurs somewhere in the sequence and a $C$ occurs somewhere in the sequence:
 
 $$
@@ -442,7 +442,7 @@ These constraints are intended to provide the structural information that differ
 
 \noindent
 Structural generalization is the primary focus of the study. Training-data availability is introduced as a secondary experimental factor to investigate whether the effect of structural representation changes when fewer examples are available.
-
+\\
 Three training-data conditions are considered:
 
 \begin{itemize}
@@ -453,9 +453,9 @@ Three training-data conditions are considered:
 
 \noindent
 The test sets are kept unchanged across these conditions. Only the amount of training data available to the model is reduced.
-
+\\
 This design allows the experiments to distinguish between two questions. First, whether a model can generalize to structurally unseen configurations. Second, whether the amount of data required to achieve such generalization changes when explicit structural information is available.
-
+\\
 The notion of data efficiency used here is therefore statistical rather than computational. It refers to predictive performance under different quantities of training data and does not refer to training time or hardware efficiency.
 
 \section{Experimental Matrix}
@@ -483,9 +483,9 @@ Each configuration is evaluated using five independent random seeds. Consequentl
 $$
 3 \times 3 \times 3 \times 5 = 135
 $$
-
+\\
 individual training runs.
-
+\\
 The experiment can therefore be viewed as a controlled factorial design with:
 
 \begin{itemize}
@@ -499,11 +499,11 @@ The experiment can therefore be viewed as a controlled factorial design with:
 
 \noindent
 Neural and neurosymbolic models are stochastic systems. Their results can vary depending on parameter initialization and other sources of randomness. To reduce the influence of a single initialization, each experimental condition is repeated using five random seeds.
-
+\\
 The seeds are fixed across model comparisons. This produces paired experimental conditions in which, for example, the Neural, LTN, and sLTN models evaluated under the same dependency and data condition are trained using corresponding random seeds.
-
+\\
 This paired structure is useful for comparing models because it reduces the influence of differences caused solely by random initialization.
-
+\\
 The experimental notebook records the model, structural dependency, training-data fraction, seed, and evaluation results for every run.
 
 \section{Evaluation Metrics}
@@ -558,25 +558,25 @@ $$
 
 \noindent
 A small gap indicates that performance is relatively stable when moving from familiar to unseen structural configurations. A large gap indicates that performance decreases substantially under structural novelty.
-
+\\
 The metric is particularly useful for the High condition, where a model may achieve high performance on familiar structural configurations while failing to transfer the learned relation to unseen configurations.
 
 \section{Data Efficiency Analysis}
 
 \noindent
 The effect of training-data availability is analyzed by comparing performance across the 100%, 50%, and 25% training conditions.
-
+\\
 The analysis does not assume that a reduction in training data will necessarily benefit a particular model. Instead, it examines whether the relative differences between Neural, LTN, and sLTN change as the amount of available training data decreases.
-
+\\
 In particular, the analysis considers whether a model maintains unseen structural accuracy when fewer training examples are available.
-
+\\
 The data-efficiency analysis therefore complements the main structural-generalization analysis rather than replacing it.
 
 \section{Statistical Analysis}
 
 \noindent
 For each combination of model, dependency, and training-data condition, results from the five random seeds are aggregated using the mean and standard deviation.
-
+\\
 For a metric $m$ measured across $K=5$ seeds, the mean is computed as
 
 $$
@@ -585,9 +585,9 @@ $$
 \frac{1}{K}
 \sum_{k=1}^{K}m_k,
 $$
-
+\\
 while the standard deviation is used to describe the variability across runs.
-
+\noindent \\
 The primary comparisons concern:
 
 \begin{enumerate}
@@ -600,7 +600,7 @@ The primary comparisons concern:
 
 \noindent
 The main outcome of interest is unseen accuracy, while the generalization gap provides a complementary measure of structural transfer.
-
+\\
 Because only five seeds are used for each condition, statistical tests are interpreted cautiously. In particular, a difference in mean performance is not automatically interpreted as evidence of a robust model advantage. Variability across seeds is reported alongside the mean values.
 
 \section{Experimental Hypotheses}
@@ -612,35 +612,35 @@ The experimental design is based on the hypotheses introduced in Chapter~1.
 
 \noindent
 Explicit structural representations are expected to improve generalization when the target task depends on structural relationships.
-
+\\
 This hypothesis is evaluated primarily through unseen accuracy and generalization gap.
 
 \subsection{H2 --- Dependence on Structural Dependency}
 
 \noindent
 The relative effect of explicit structural representation is expected to increase as the degree of structural dependency increases.
-
+\\
 The comparison between Low, Medium, and High conditions is therefore central to this hypothesis.
 
 \subsection{H3 --- Training Data Availability}
 
 \noindent
 The potential benefit of explicit structural representation is expected to become more relevant when fewer training examples are available.
-
+\\
 This hypothesis is investigated through the 100%, 50%, and 25% training conditions.
 
 \subsection{H4 --- Structural Relevance}
 
 \noindent
 When structural information is not required to solve the target task, explicit structural reasoning is not expected to provide a systematic advantage.
-
+\\
 The Low condition provides the main control for this hypothesis.
 
 \section{Implementation and Experimental Reproducibility}
 
 \noindent
 The complete experimental pipeline is implemented in a single executable notebook. The notebook performs dataset generation, integrity checks, model initialization, training, evaluation, result aggregation, and visualization.
-
+\\
 The experimental configuration is centralized so that the main parameters can be reproduced consistently. For example, the sequence length and alphabet are defined explicitly:
 
 \begin{verbatim}
@@ -652,37 +652,37 @@ N_PER_CLASS = 500
 
 \noindent
 The complete dataset generator also performs automatic checks for class balance, exact-example disjointness, and structural leakage before training begins.
-
+\\
 The notebook records the results of every individual run in a structured table. This makes it possible to reconstruct aggregate results from the individual seed-level measurements rather than relying only on precomputed averages.
-
+\\
 The use of a single notebook also reduces the risk of inconsistencies between separately executed scripts during the experimental phase. The complete implementation is retained as part of the experimental artifacts, while selected code fragments are included in this thesis to document the methodology.
 
 \section{Experimental Controls}
 
 \noindent
 Several controls are incorporated into the experimental design to isolate the effect of explicit structural representation.
-
+\\
 First, all models are evaluated on the same generated examples. Differences in model performance therefore cannot be attributed to differences in the data presented to the models.
-
+\\
 Second, the same structural train--test partition is used across model comparisons. The unseen condition consequently represents the same structural generalization challenge for Neural, LTN, and sLTN.
-
+\\
 Third, the training-data fractions are applied consistently across models. A 25% experiment therefore represents the same reduction in available training data for all three model settings.
-
+\\
 Fourth, multiple random seeds are used for every experimental configuration.
-
+\\
 Finally, the distinction between LTN and sLTN is kept conceptually explicit. LTN represents the conventional logical framework without the additional structural representation, while sLTN introduces structural dimensions and structural relations into the logical language.
-
+\\
 These controls are necessary because the purpose of the experiment is not simply to compare three architectures, but to investigate whether explicit structural reasoning contributes to generalization under controlled conditions.
 
 \section{Experimental Interpretation Protocol}
 
 \noindent
 The results are interpreted according to the experimental design rather than according to an assumption that one model must outperform the others.
-
+\\
 In particular, an improvement of sLTN over the neural baseline is not by itself sufficient to establish the usefulness of structural reasoning. The effect must also be considered in relation to the LTN baseline and to the structural dependency of the task.
-
+\\
 Similarly, a failure of sLTN to outperform the other models is not interpreted as evidence that structural reasoning is ineffective in general. It may instead indicate that the particular structural representation, logical formulation, or task configuration does not provide a useful inductive bias under the considered conditions.
-
+\\
 The experimental analysis therefore focuses on conditional effects. The central question is whether the difference between models changes systematically as the relevance of structural information changes.
-
+\\
 This approach is consistent with the overall research objective of the thesis: rather than determining whether sLTN is universally superior, the experiments investigate the conditions under which explicit structural representation contributes to generalization and the conditions under which its contribution is limited.
